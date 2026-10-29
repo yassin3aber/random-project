@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مشروع عشوائي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--ink:#f4f4f4;--dim:#a3a3a3;--red:#d90f22;--red2:#ff3347;--line:rgba(217,15,34,.5);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:radial-gradient(ellipse at 50% 42%,rgba(140,0,12,.30),transparent 62%),var(--bg);color:var(--ink);font-family:"Cairo",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+#web{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1;width:100%;max-width:760px;flex:1;display:flex;flex-direction:column;align-items:center;padding:28px 18px 24px;text-align:center}
+h1{font-family:"Reem Kufi","Cairo",sans-serif;font-weight:700;font-size:clamp(2.2rem,7vw,3.6rem);margin:6px 0 4px;letter-spacing:.02em;text-shadow:0 0 28px rgba(217,15,34,.6)}
+.rule{width:92px;height:2px;background:linear-gradient(90deg,transparent,var(--red2),transparent);margin-bottom:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{font:600 .95rem "Cairo",sans-serif;color:var(--dim);background:transparent;border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:6px 18px;cursor:pointer;transition:.18s}
+.chip:hover{color:var(--ink);border-color:var(--red2)}
+.chip[aria-pressed="true"]{color:#fff;background:var(--red);border-color:var(--red2);box-shadow:0 0 16px rgba(217,15,34,.55)}
+.stage{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;gap:10px}
+.reel{height:1.45em;font-size:clamp(2.1rem,8.2vw,4.6rem);font-family:"Reem Kufi","Cairo",sans-serif;font-weight:700;line-height:1.45;overflow:hidden;max-width:100%;padding:0 6px}
+.reel span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reel.spin span{color:var(--red2);animation:drop .09s ease-out}
+.reel.land span{animation:pop .6s ease-out}
+.reel.idle span{color:var(--dim);font-size:.55em}
+@keyframes drop{from{transform:translateY(-55%);opacity:.15}to{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(1.25);color:var(--red2);text-shadow:0 0 40px var(--red2)}100%{transform:none;color:#fff;text-shadow:0 0 22px rgba(217,15,34,.6)}}
+.en{direction:ltr;color:var(--red2);font-weight:600;letter-spacing:.14em;font-size:1.05rem;min-height:1.6em}
+.desc{max-width:34em;font-size:1.15rem;line-height:1.85;color:#e6e6e6;min-height:3.7em;margin:0}
+.lvl{font-size:.9rem;color:var(--dim);border:1px solid var(--line);border-radius:99px;padding:2px 14px;min-height:1.9em}
+.show{animation:fade .5s ease-out both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.go{font:700 1.5rem "Reem Kufi","Cairo",sans-serif;color:#fff;background:linear-gradient(180deg,var(--red2),var(--red));border:0;border-radius:14px;padding:12px 54px;cursor:pointer;box-shadow:0 0 30px rgba(217,15,34,.5),inset 0 -3px 0 rgba(0,0,0,.35);transition:transform .12s,opacity .2s}
+.go:hover{transform:translateY(-2px)}.go:active{transform:translateY(1px)}.go:disabled{opacity:.45;cursor:wait}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.icon{position:fixed;z-index:5;top:calc(12px + env(safe-area-inset-top,0px));width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.65);color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:1.15rem;backdrop-filter:blur(4px)}
+.icon:hover{border-color:var(--red2)}
+#burger{left:calc(12px + env(safe-area-inset-left,0px))}
+#snd{right:calc(12px + env(safe-area-inset-right,0px))}
+#burger i{display:block;width:20px;height:2px;background:var(--ink);box-shadow:0 6px 0 var(--ink),0 -6px 0 var(--ink)}
+#shade{position:fixed;inset:0;z-index:6;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.25s}
+#shade.on{opacity:1;pointer-events:auto}
+aside{position:fixed;z-index:7;top:0;bottom:0;left:0;width:min(92vw,390px);background:#050000;border-right:1px solid var(--red);transform:translateX(-105%);transition:transform .28s ease;overflow-y:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 18px calc(24px + env(safe-area-inset-bottom,0px));text-align:right}
+aside.on{transform:none}
+aside h2{font-family:"Reem Kufi",sans-serif;margin:0 0 4px;font-size:1.5rem}
+aside p{margin:0 0 14px;color:var(--dim);font-size:.9rem;line-height:1.7}
+label{display:block;font-size:.88rem;color:var(--dim);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:#0d0d0d;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px 12px}
+input[dir=ltr]{text-align:left}
+textarea{min-height:72px;resize:vertical}
+.save{margin-top:14px;width:100%;font:700 1.05rem "Cairo",sans-serif;color:#fff;background:var(--red);border:0;border-radius:10px;padding:10px;cursor:pointer}
+.q{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:8px}
+.q button{background:none;border:0;color:var(--red2);font:600 .9rem "Cairo",sans-serif;cursor:pointer}
+hr{border:0;border-top:1px solid rgba(255,255,255,.12);margin:20px 0 6px}
+details summary{cursor:pointer;color:var(--ink);font-weight:600;padding:6px 0}
+.msg{min-height:1.4em;font-size:.88rem;color:var(--red2);margin-top:8px}
+@media (max-width:520px){.go{padding:12px 40px}.desc{font-size:1.05rem}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="web" aria-hidden="true"></canvas>
+<button class="icon" id="burger" aria-label="القائمة" aria-expanded="false"><i></i></button>
+<button class="icon" id="snd" aria-label="الصوت" aria-pressed="true">🔊</button>
+<div id="shade"></div>
+<aside id="menu" aria-label="إضافة مشروع">
+  <h2>مشاريعي</h2>
+  <p>سجّل مشروع هنا، وأول مرة تدوس فيها على الزرار هيظهر كأنه طلع بالصدفة.</p>
+  <label for="fa">اسم المشروع</label><input id="fa" maxlength="60">
+  <label for="fe">الاسم بالإنجليزي</label><input id="fe" dir="ltr" maxlength="60">
+  <label for="fd">وصف النتيجة</label><textarea id="fd" maxlength="220"></textarea>
+  <label for="fl">الصعوبة</label>
+  <select id="fl"><option value="1">سهل</option><option value="2">متوسط</option><option value="3">متقدم</option></select>
+  <button class="save" id="add">احفظ</button>
+  <div class="msg" id="msg" role="status"></div>
+  <div id="ql"></div>
+  <hr>
+  <details>
+    <summary>إضافة قايمة كبيرة مرة واحدة</summary>
+    <p>كل سطر مشروع بالشكل ده، والمشاريع دي بتدخل في الاختيار العشوائي العادي:<br>الاسم | English | الوصف | سهل أو متوسط أو متقدم</p>
+    <textarea id="bulk" dir="rtl" style="min-height:130px"></textarea>
+    <button class="save" id="imp">أضف القايمة</button>
+    <button class="q" id="clr" style="width:100%;justify-content:center;margin-top:8px;color:var(--red2)">امسح المشاريع المضافة</button>
+  </details>
+</aside>
+<main>
+  <h1>مشروع عشوائي</h1><div class="rule"></div>
+  <div class="chips" role="group" aria-label="الصعوبة">
+    <button class="chip" data-l="0" aria-pressed="true">الكل</button>
+    <button class="chip" data-l="1" aria-pressed="false">سهل</button>
+    <button class="chip" data-l="2" aria-pressed="false">متوسط</button>
+    <button class="chip" data-l="3" aria-pressed="false">متقدم</button>
+  </div>
+  <div class="stage" aria-live="polite">
+    <div class="reel idle" id="reel"><span>دوّر وشوف هتعمل إيه</span></div>
+    <div class="en" id="en"></div>
+    <p class="desc" id="desc"></p>
+    <div class="lvl" id="lvl"></div>
+  </div>
+  <button class="go" id="go">دوّر</button>
+</main>
+<script>
+const LV={1:"سهل",2:"متوسط",3:"متقدم"};
+const BASE=[
+["تحذير قبل ما اللبن يفور","Milk Boil Alarm","سيب الحلة وانت مطمّن، هتنبّهك قبل ما اللبن يطلع.",1],
+["نور بالتصفيق","Clap Light","تصقّف مرة النور يفتح، تصقّف تاني يقفل.",1],
+["صندوق لا تفتحني","Don’t Open Me Box","أول ما حد يفتحه يصرخ فيه، مقلب مضمون في أي حد.",1],
+["سلة قمامة بتفتح لوحدها","Auto-Open Trash Bin","تقرّب إيدك الغطا يفتح، تبعد يقفل، من غير ما تلمس حاجة.",1],
+["كرة 8 السحرية","Magic 8-Ball","تهزّ الجهاز ويجاوبك على أي سؤال بنعم أو لا.",1],
+["موزّع صابون من غير لمس","Touchless Soap Dispenser","إيدك تحت الصنبور والصابونة تنزل لوحدها.",1],
+["ريأكشن اتنين لاعبين","Reaction Duel","أسرع واحد يدوس أول ما النور يضوي ياخد النقطة.",1],
+["نور يفتح مع غروب الشمس","Sunset Light","الدنيا تضلّم والنور يفتح لوحده، الشمس تطلع ويقفل.",1],
+["ماكينة نعم أو لا","Decision Machine","مش عارف تاخد قرار؟ الماكينة تقرر عنك.",1],
+["مروحة بتتبعك","Follow Me Fan","تتحرك في الأوضة والمروحة تلفّ معاك.",2],
+["ستارة بتفتح مع الشمس","Sun Curtain","تصحى والستارة فاتحة من نفسها.",2],
+["علبة دواء لجدّك","Smart Pill Box","تفتح في ميعاد الدوا وتبلّغ العيلة لو اتنسى.",2],
+["سولار بتلفّ ورا الشمس","Sun-Chasing Solar Panel","لوح بيمشي مع الشمس طول اليوم ويشحن أكتر من الثابت.",2],
+["عربية بتمشي ورا الضوء","Light Chaser Car","شغّل كشاف وهي تجري وراه في كل مكان.",2],
+["عربية تتبع خط أسود","Line Follower Car","ترسم خط والعربية تمشي عليه من غير ما تخرج منه.",2],
+["ري ذكي للنبات","Smart Plant Waterer","النبات يعطش وهو يسقيه لوحده.",2],
+["قفل خزنة بكارت","Card Safe","الخزنة مبتفتحش غير بالكارت بتاعك.",2],
+["يد تلوّح لكل داخل","Waving Hand","أول ما حد يدخل الأوضة، إيد روبوت تقوله سلام.",2],
+["يد روبوت بعضلتك","Muscle-Controlled Hand","تشدّ عضلة دراعك واليد الروبوت تقفل صوابعها معاك.",3],
+["نضارة للمكفوفين","Blind Assist Glasses","تقول لصاحبها إيه اللي قدامه وبعده قد إيه.",3],
+["باب بيفتح بوشّك","Face-Unlock Door","الباب يعرفك ويفتحلك، ويتجاهل أي حد غريب.",3],
+["ذراع تكتب بخط إيدك","Handwriting Arm","تديها نص وتكتبه على ورقة بخط شكله إيد بني آدم.",3],
+["ريموت بإشارة الإيد","Gesture Remote","تقفل إيدك النور يقفل، تفتحها يفتح.",3],
+["جارفيس بالمصري","Egyptian Jarvis","تكلّمه بلهجتك وهو ينفّذ في أوضتك.",3],
+["سلة بتفرز الزبالة","Sorting Trash Bin","ترمي أي حاجة وهي تعرف بلاستيك ولا ورق وتحطها في مكانها.",3],
+["كاشف نعاس","Drowsiness Detector","يشوف وشّك ويصرخ فيك قبل ما تنام.",3],
+["مدرّس ميكاترونكس شخصي","Mechatronics AI Tutor","تسأله في أي حاجة في مادتك ويرد من ملفاتك انت.",3],
+["جرس لمس بصوت","Touch Doorbell","تلمس مكان الجرس وهو يرن من غير زرار.",1],
+["إنذار لو حد فتح درجك","Drawer Alarm","أي حد يفتح الدرج في غيابك الإنذار يفضحه.",1],
+["مقياس ضوضاء الأوضة","Noise Meter","يوريك الأوضة هادية ولا دوشة بالأرقام.",1],
+["كاشف مية تحت الغسالة","Leak Detector","أول نقطة مية تتسرّب يرن عليك فوراً.",1],
+["مضخة تملّا الجردل","Auto Bucket Filler","الجردل يتملّي لحد العلامة والمضخة تقف لوحدها.",1],
+["قفل بتتابع لمسات سرية","Secret Knock Lock","القفل مبيفتحش غير بإيقاع لمسات انت بس عارفه.",1],
+["الكتابة بالمورس","Morse Writer","تلمس وتفصل وتطلع رسالتك مكتوبة على الشاشة.",1],
+["إشارة مرور مصغرة","Mini Traffic Light","ماكيت إشارة بتتغير زي الحقيقية.",1],
+["ترمومتر بإنذار","Heat Alarm","لو الحرارة زادت عن الحد يصرخ.",1],
+["عدّاد دخول وخروج","Visitor Counter","يعدّ كام واحد دخل وخرج من الباب.",1],
+["كاشف غاز يقفل الصمام","Gas Guard","يشمّ الغاز ويقفل الصمام ويشغّل الشفاط لوحده.",1],
+["مفتاح مخفي في الحيطة","Hidden Wall Switch","تلمس مكان سري على الحيطة والباب يتفتح.",1],
+["إنذار امتلاء الجردل","Overflow Alarm","ينبهك قبل ما المية تفيض.",1],
+["نور الحمام التلقائي","Bathroom Auto Light","تدخل النور يفتح، تخرج يقفل.",1],
+["نور يفتح لما تدخل الضلمة","Dark Entry Light","النور مبيفتحش غير لو الدنيا ضلمة.",1],
+["مروحة بتشتغل لو في حد","Presence Fan","المروحة تشتغل بس لو في حد في الأوضة.",1],
+["لعبة ثعبان في إيدك","Pocket Snake","لعبة الثعبان القديمة بجويستيك صغير.",1],
+["سبحة إلكترونية","Digital Tasbeeh","تلمس وتعدّ، وتهتز كل ما تكمل دورة.",1],
+["ذيل كلب روبوت","Robot Dog Tail","يهزّ ذيله لما تقرّب منه.",1],
+["تمثال بيلتفت لما تعدّي","Watching Statue","تعدّي قدامه ويلتفت عليك زي الفيلم.",1],
+["لمبة بتتحمّس مع صوتك","Voice Lamp","كل ما صوتك يعلى النور يقوى.",1],
+["مسرح دوّار لتصوير المنتجات","Product Turntable","تحط حاجة عليه وتصوّرها من كل الزوايا.",1],
+["مقياس حماسك","Cheer Meter","يقيس قوة تصفيقك ويدّيك درجة.",1],
+["قياس زمن رد فعلك","Reflex Tester","يقولك سرعتك بالملي ثانية.",1],
+["نور بالهمس","Whisper Light","تهمس بس والنور يفتح.",1],
+["شجرة بتضوي مع الصوت","Sound Tree","الشجرة تنوّر على إيقاع أي صوت.",1],
+["جهاز اختيار الغدا","Lunch Picker","متحتارش، الجهاز يقولك هتاكل إيه.",1],
+["زهرة نرد إلكترونية","Digital Dice","ترمي النرد من غير ما يقع منك.",1],
+["مزلقان قطر مصغر","Mini Rail Crossing","القطر يقرب والمزلقان ينزل ويرن.",1],
+["ساعة رقمية بالتوقيت المظبوط","Net Clock","ساعة بتظبط نفسها من النت.",1],
+["حارس الشوكولاتة","Chocolate Guard","لو حد قرّب من الشوكولاتة يصوّره ويبلّغك.",2],
+["مصيدة فئران إلكترونية","Smart Mouse Trap","تقفل لوحدها أول ما الفار يدخل.",2],
+["جرس باب بصورة الزائر","Photo Doorbell","الجرس يرن وتشوف مين على الباب من موبايلك.",2],
+["كاشف شخير","Snore Tracker","يقولك شخرت قد إيه طول الليل.",2],
+["وردة ميكانيكية","Mechanical Flower","تتفتح مع الشمس وتتقفل بالليل.",2],
+["ماكينة عصير","Juice Machine","تدوس زرار وكوباية العصير تتملّي.",2],
+["مغذّي طيور","Bird Feeder","يرمي الأكل لما حد يقرب منه.",2],
+["لعبة اضرب الخلية","Whack-a-Mole","أضواء تنط وانت تضرب أسرع منها.",2],
+["قفل كتاب بصوتك","Voice Lock Book","مبيتفتحش غير بنبرة صوتك.",2],
+["مهد بيهتز لما العيّل يعيّط","Cry-Rocking Cradle","يسمع العياط ويهزّ المهد لوحده.",2],
+["عربية هاربة من العوائق","Obstacle Dodger Car","تمشي ومتخبّطش في حاجة.",2],
+["عربية بتتحكم فيها بالموبايل","Phone RC Car","تتحكم فيها من موبايلك زي اللعبة.",2],
+["عربية بتحافظ على مسافة منك","Distance Keeper Car","تقرّب وتبعد عنك بمسافة ثابتة.",2],
+["عربية مبتقعش من الحافة","Cliff-Safe Car","توصل لحافة الترابيزة وتلفّ.",2],
+["عربية تفرّق الألوان","Color Rule Car","أحمر تقف، أخضر تمشي.",2],
+["عدّاد سرعة الموتور","RPM Meter","يوريك سرعة الموتور بالأرقام.",2],
+["ميزان ميل رقمي","Digital Level","يقولك الحاجة مايلة كام درجة.",2],
+["مراقب بطارية","Battery Watcher","يوريك فاضل في البطارية قد إيه.",2],
+["محطة طقس صغيرة","Mini Weather Station","حرارة وضوء البيت على شاشتك.",2],
+["مقياس طاقة المضخة","Pump Power Meter","يقيس المضخة بتاخد كام ويرسمه.",2],
+["إنذار رطوبة الدولاب","Wardrobe Humidity Alarm","ينبهك قبل ما الهدوم تتعفّن.",2],
+["بوابة جراج بكارت","Card Garage Gate","تعدّي الكارت والبوابة تفتح.",2],
+["جراج بيقولك ارجع لورا","Parking Assistant","يعرّفك لسه قدامك قد إيه وانت راكن.",2],
+["يد تضغط الزراير بدالك","Button Pusher","تضغط أي زرار في البيت عنك.",2],
+["لعبة بتلعبها بعضلتك","Muscle Game","تشدّ عضلتك والشخصية تنط.",2],
+["كاشف شدّ الفك والكتف","Tension Alert","يفكّرك تريّح لما تتوتر من غير ما تحس.",2],
+["زرار طوارئ لكبار السن","Elder Panic Button","زرار واحد يبلّغ العيلة كلها.",2],
+["مساعد مذاكرة بيختبرك","Study Quizzer","يسألك من مادتك ويعرف نقاط ضعفك.",2],
+["بوت تليجرام لمشاريعك","Project Telegram Bot","تتحكم في كل مشاريعك من الموبايل.",2],
+["كاشف رسايل النصب","Scam Detector","يقولك الرسالة دي نصب ولا لأ.",2],
+["ذراع تقلّب صفحات الكتاب","Page Turner","تذاكر وإيدك فاضية والصفحة تتقلب.",2],
+["آلة بيع بكارت","Card Vending Machine","تعدّي الكارت وتنزل لك الحاجة.",2],
+["عربية تحل متاهة","Maze Solver Car","تدخل المتاهة وتخرج منها لوحدها.",3],
+["كاميرا حارس متحرك","Patrol Camera Car","تلفّ في البيت وتبعتلك صورة لو لقت حركة.",3],
+["عربية تتحكم فيها بعضلتك","Muscle RC Car","تشدّ عضلة دراعك وتتحرك.",3],
+["عربية بتمشي ورا إيدك","Hand Follower Car","تشاور لها وتروح ورا إيدك.",3],
+["حامل موبايل بيتتبعك","Selfie Tracker Stand","تمشي في الأوضة والموبايل يلفّ معاك.",3],
+["كاميرا بتتبع وشّك","Face Tracking Camera","الكاميرا تلفّ معاك في أي مكان.",3],
+["عين ميكانيكية","Tracking Eye","عين تتبع حركتك في الأوضة.",3],
+["بيانو في الهوا","Air Piano","تعزف على الهوا من غير جهاز.",3],
+["مرآة تقرأ مشاعرك","Emotion Mirror","تعرض مشاعرك على الشاشة زي الإيموجي.",3],
+["كرة بتتوازن على لوح","Ball Balancer","كرة فوق لوح تفضل ثابتة مهما حركت.",3],
+["لعبة بتتحكم فيها بتعابير وجهك","Face Game","تبتسم وتتحرك اللعبة.",3],
+["روبوت مساعد شامل","Ultimate Helper Robot","كاميرا وصوت ويد وعربية في مشروع واحد.",3],
+["يد تلعب حجر ورق مقص","RPS Hand","تلعب ضدك وتكسب أو تخسر بالدور.",3],
+["يد تعدّ بالصوت","Counting Hand","تقولها رقم وتشاور عليه بصوابعها.",3],
+["يد تقلّد صوابعك","Mimic Hand","تحرّك صباع وهي تحرّك زيه.",3],
+["يد تترجم لغة الإشارة","Sign Hand","تكتب كلمة وهي تتشاور عليها.",3],
+["ماوس بعضلتك","Muscle Mouse","تشدّ قبضتك وتعمل كليك.",3],
+["ريموت لشخص مش بيقدر يحرك إيده","Assist Remote","عضلة صغيرة تتحكم في التلفزيون.",3],
+["كاميرا تكتشف وقوع كبير السن","Fall Detector","لو حد وقع تبلّغ العيلة فوراً.",3],
+["نضارة تقرا لك اللافتات","Reading Glasses","توجّه على ورقة وتقرأها لك بصوت.",3],
+["نضارة بتتعرف على الوشوش","Face Name Glasses","تقولك اسم اللي قدامك.",3],
+["كاميرا بتحمي الأطفال","Child Safety Cam","تنبّهك لو الطفل قرّب من حاجة خطر.",3],
+["حارس القطة","Cat Guardian","يعرف القطة ويفتح لها ويأكلها.",3],
+["قارئ لوحات العربيات","Plate Reader Gate","البوابة تفتح لعربيتك بس.",3],
+["مساعد طبخ من التلاجة","Fridge Chef","يصوّر التلاجة ويقولك تطبخ إيه.",3],
+["مترجم صوت لحظي","Live Translator","تتكلم وتشوف الترجمة على الشاشة.",3],
+["ذراع ترسم بورتريه","Portrait Plotter","تديها صورتك وترسمها بالقلم.",3],
+["ذراع تلعب إكس أو ضدك","XO Robot","تلعب إكس أو بالقلم على ورقة حقيقية.",3],
+["ذراع تلقط حاجة من الأرض","Pick and Place Arm","تلاقي الحاجة وترفعها لوحدها.",3]
+];
+const $=id=>document.getElementById(id);
+const ld=k=>{try{const v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v:[]}catch(e){return[]}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let extra=ld("rp_extra"),queue=ld("rp_queue"),lvl=0,busy=false,sound=true,AC=null;
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const pool=()=>BASE.concat(extra).filter(p=>!lvl||p[3]===lvl);
+/* sound */
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC}
+function beep(f,t,g,type,d){if(!sound||!AC)return;const o=AC.createOscillator(),v=AC.createGain();o.type=type;o.frequency.value=f;v.gain.setValueAtTime(g,AC.currentTime+t);v.gain.exponentialRampToValueAtTime(.0008,AC.currentTime+t+d);o.connect(v).connect(AC.destination);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d+.02)}
+const tick=p=>{const f=330+p*620;beep(f,0,.09,"triangle",.09);beep(f*2,0,.035,"sine",.06)};
+const land=()=>{beep(90,0,.5,"sine",.5);beep(660,.02,.12,"triangle",.9);beep(990,.02,.08,"triangle",.9);beep(1320,.12,.05,"triangle",.8)};
+/* spin */
+function show(p,cls){const r=$("reel");r.className="reel "+cls;const s=document.createElement("span");s.textContent=p[0];r.replaceChildren(s)}
+function spin(){
+  if(busy)return;ac();busy=true;$("go").disabled=true;
+  ["en","desc","lvl"].forEach(i=>{$(i).textContent="";$(i).classList.remove("show")});
+  const rigged=queue.length?queue.shift():null;if(rigged)sv("rp_queue",queue),renderQ();
+  const src=pool(),all=BASE.concat(extra,queue,rigged?[rigged]:[]);
+  const cyc=src.length>1?src:all;
+  let target=rigged||src[Math.floor(Math.random()*src.length)];
+  if(!target){busy=false;$("go").disabled=false;return}
+  const steps=reduce?6:22+Math.floor(Math.random()*5),g=reduce?1.15:1.09;
+  let i=0,d=45,last=null;
+  (function step(){
+    if(i<steps){let p;do{p=cyc[Math.floor(Math.random()*cyc.length)]}while(p===last&&cyc.length>1);last=p;
+      show(p,"spin");tick(i/steps);i++;d*=g;setTimeout(step,d)}
+    else{show(target,"land");land();$("en").textContent=target[1];$("desc").textContent=target[2];$("lvl").textContent="الصعوبة: "+LV[target[3]];
+      ["en","desc","lvl"].forEach(k=>$(k).classList.add("show"));busy=false;$("go").disabled=false}
+  })();
+}
+$("go").onclick=spin;
+document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{lvl=+b.dataset.l;document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b))});
+$("snd").onclick=()=>{sound=!sound;$("snd").textContent=sound?"🔊":"🔇";$("snd").setAttribute("aria-pressed",sound)};
+/* menu */
+const openM=o=>{$("menu").classList.toggle("on",o);$("shade").classList.toggle("on",o);$("burger").setAttribute("aria-expanded",o)};
+$("burger").onclick=()=>openM(!$("menu").classList.contains("on"));$("shade").onclick=()=>openM(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")openM(false)});
+function renderQ(){const q=$("ql");q.replaceChildren();queue.forEach((p,i)=>{const r=document.createElement("div");r.className="q";const s=document.createElement("span");s.textContent=p[0];const b=document.createElement("button");b.textContent="حذف";b.onclick=()=>{queue.splice(i,1);sv("rp_queue",queue);renderQ()};r.append(s,b);q.append(r)})}
+$("add").onclick=()=>{const a=$("fa").value.trim(),e=$("fe").value.trim(),d=$("fd").value.trim();
+  if(!a||!d){$("msg").textContent="اكتب اسم المشروع ووصفه الأول.";return}
+  queue.push([a,e||a,d,+$("fl").value]);sv("rp_queue",queue);renderQ();["fa","fe","fd"].forEach(i=>$(i).value="");$("msg").textContent="اتحفظ. هيظهر في الدوران الجاي."};
+$("imp").onclick=()=>{let n=0;$("bulk").value.split("\n").forEach(l=>{const x=l.split("|").map(s=>s.trim());if(x.length>=3&&x[0]&&x[2]){const m={"سهل":1,"متوسط":2,"متقدم":3};extra.push([x[0],x[1]||x[0],x[2],m[x[3]]||2]);n++}});
+  sv("rp_extra",extra);$("bulk").value="";$("msg").textContent="اتضاف "+n+" مشروع.";};
+$("clr").onclick=()=>{extra=[];sv("rp_extra",extra);$("msg").textContent="اتمسحت المشاريع المضافة."};
+renderQ();
+/* web */
+const cv=$("web"),cx=cv.getContext("2d");let W,H,spinningT=0;
+function size(){const r=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;cx.setTransform(r,0,0,r,0,0)}
+function web(x,y,a0,a1,R,t,w){const n=9,rings=11,P=(a,r)=>[x+Math.cos(a)*r,y+Math.sin(a)*r];
+  cx.lineWidth=1;cx.strokeStyle="rgba(255,255,255,.14)";cx.beginPath();
+  for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n,p=P(a,R);cx.moveTo(x,y);cx.lineTo(p[0],p[1])}cx.stroke();
+  cx.strokeStyle="rgba(217,15,34,.5)";cx.beginPath();
+  for(let k=1;k<=rings;k++){const r=R*k/rings*(1+w*Math.sin(t*9+k));
+    for(let i=0;i<n;i++){const a=a0+(a1-a0)*i/n,b=a0+(a1-a0)*(i+1)/n,p=P(a,r),q=P(b,r),c=P((a+b)/2,r*.9);cx.moveTo(p[0],p[1]);cx.quadraticCurveTo(c[0],c[1],q[0],q[1])}}
+  cx.stroke()}
+let lastT=0;
+function frame(ts){if(busy||ts-lastT>90){lastT=ts;const t=ts/1000,w=reduce?0:busy?.014:.003,R=Math.min(Math.max(W,H)*.62,820),h=Math.PI/2;
+  cx.clearRect(0,0,W,H);web(0,0,0,h,R,t,w);web(W,0,h,2*h,R,t,w);web(W,H,2*h,3*h,R,t,w);web(0,H,3*h,4*h,R,t,w)}
+  requestAnimationFrame(frame)}
+addEventListener("resize",size);size();requestAnimationFrame(frame);
+</script>
+</body>
+</html>
